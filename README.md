@@ -354,6 +354,12 @@ app.listen(port, host);
 ```
 
 **Question 2.2** vérifier que les trois routes fonctionnent.
+![localhost8000](https://github.com/tlagikula/LAGIKULA_Tenisio_CC3/assets/144082027/4bca529f-b005-460c-855a-5979cfd77e24)
+![localhostindexhtml](https://github.com/tlagikula/LAGIKULA_Tenisio_CC3/assets/144082027/ed644bc0-15c5-4091-b45e-8fbd9afa80d2)
+![localhostrandom](https://github.com/tlagikula/LAGIKULA_Tenisio_CC3/assets/144082027/c70cc26e-4918-4d1a-889b-52776cd2bf39)
+
+
+
 
 **Question 2.3** lister les en-têtes des réponses fournies par Express. Lesquelles sont nouvelles par rapport au serveur HTTP ?
 
