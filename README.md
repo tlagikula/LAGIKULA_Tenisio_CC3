@@ -70,14 +70,13 @@ Enfin, exécuter la commande `node server-http.mjs` et vérifier que votre appli
 **Question 1.1** donner la liste des en-têtes de la réponse HTTP du serveur.
 
 <!-- réponse 1.1 -->
-
+```
 HTTP/1.1 200 OK
 Date: Wed, 27 Sep 2023 21:40:30 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 Transfer-Encoding: chunked
-
-
+```
 
 ### Servir différents types de contenus
 
@@ -91,6 +90,16 @@ function requestListener(_request, response) {
 ```
 
 **Question 1.2** donner la liste des en-têtes qui ont changé depuis la version précédente.
+
+<!-- réponse 1.2 -->
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Wed, 27 Sep 2023 21:46:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Content-Length: 20
+```
 
 Remplacer enfin la fonction `requestListener()` par la suivante et tester :
 
@@ -110,7 +119,29 @@ function requestListener(_request, response) {
 
 **Question 1.3** que contient la réponse reçue par le client ?
 
+<!-- réponse 1.3 -->
+```
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Wed, 27 Sep 2023 21:54:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+Parmi les en-têtes de réponse HTTP du serveur, on a une en-têtes nommé content-type.
+ Elle nous renseigne sur le contenu et avec ça on peut savoir d'où il provient.
+Et dans cette question la réponse contient le texte présent dans le fichier index.html
+```
+
 **Question 1.4** quelle est l'erreur affichée dans la console ? Retrouver sur <https://nodejs.org/api> le code d'erreur affiché.
+
+<!-- réponse 1.4 -->
+```
+l'erreur affiché est une erreur errno avec comme nombre négatif "-4058"
+ et avec comme code "ENOENT".
+ cette erreur signifie que le fichier index.html est introuvable et pour cause,
+ nous avons modifier le nom du fichier index.html
+```
 
 Modifier la fonction `requestListener()` précédente pour que le client recoive une erreur 500 si `index.html` est introuvable en remplacant le callback de la méthode `Promise.catch()`.
 
@@ -119,6 +150,22 @@ Maintenant, renommer le fichier `__index.html` en `index.html` et tester à nouv
 Enfin, reprenez `requestListener()` dans le style `async/await`.
 
 **Question 1.5** donner le code de `requestListener()` modifié _avec gestion d'erreur_ en `async/await`.
+
+<!-- réponse question 1.5 -->
+```js
+async function requestListener(_request, response) {
+  try {
+    const contents = await fs.readFile("index.html", "utf8");
+    response.setHeader("Content-Type", "text/html");
+    response.writeHead(200);
+    response.end(contents);
+  } catch (error) {
+    console.error(error);
+    response.writeHead(500); // Set HTTP status code to 500 (Internal Server Error)
+    response.end("Internal Server Error");
+  }
+}
+```
 
 **Commit/push** dans votre dépot Git.
 
@@ -130,6 +177,10 @@ Dans le dossier `devweb-tp5` exécuter les commandes suivantes :
 - `npm install nodemon --save-dev`
 
 **Question 1.6** indiquer ce que cette commande a modifié dans votre projet.
+```
+cette commande a ajouter un un dossier node_modules et
+un fichier package-lock.json qui installe les dépendances npm.
+```
 
 Ensuite, remplacer la propriété `"scripts"` du fichier `package.json` par la suivante :
 
@@ -146,6 +197,12 @@ Enregistrer le fichier et vérifier qu'il y a eu rechargement automatique grâce
 Ensuite, faire la même chose avec la commande `npm run http-prod`.
 
 **Question 1.7** quelles sont les différences entre les scripts `http-dev` et `http-prod` ?
+
+```
+une des différences remarqués entre les scripts ci-dessus sont le fait
+que le serveur est rechargé à chaque sauvegarde du script pour http-dev
+par rapport à http-prod qui lui n'a pas cette capacité.
+```
 
 Les fichiers [`.eslintrc.json`](.eslintrc.json) et [`.prettierrc`](.prettierrc) sont fournis dans le dossier `devweb-tp5`. Exécuter la commande suivante pour installe les dépendances :
 
@@ -197,12 +254,56 @@ Tester les **routes** suivantes :
 
 **Question 1.8** donner les codes HTTP reçus par votre navigateur pour chacune des quatre pages précédentes.
 
+```
+http://localhost:8000/index.html : 200
+http://localhost:8000/random.html : 200
+http://localhost:8000/ : 404
+http://localhost:8000/dont-exist : 404
+```
+ 
 Maintenant, on veut ajouter une route `/random/:nb` où `:nb` est un paramètre entier avec le nombre d'entiers à générer. Ajouter cette route au `switch` et reprendre la page `random.html` pour générer autant de nombres qu'indiqué dans l'URL.
 
 Pour cela, utiliser `request.url.split("/");` qui va décomposer le chemin demandé et faire le `switch` sur le premier niveau de l'arborescence. Faites en sorte que le `switch` traite `/index.html` et `/` de la même façon.
 
 **Commit/push** dans votre dépot Git.
+```js
+let nb = 1;
+let valeur_random = [];
 
+async function requestListener(request, response) {
+    response.setHeader("Content-Type", "text/html");
+    try {
+        const contents = await fs.readFile("index.html", "utf8");
+        switch (request.url.split("/")[1]) {
+            case "index.html":
+                response.writeHead(200);
+                return response.end(contents);
+            case "":
+                response.writeHead(200);
+                return response.end(contents);
+            case "random.html":
+                for (let i=0;i<nb;i++){
+                    valeur_random.push(Math.floor(100 * Math.random()));
+                }
+                response.writeHead(200);
+                // return response.end(`<html><p>${Math.floor(100 * Math.random())}</p></html>`);
+                return response.end(`<html><p>${valeur_random}</p></html>`);
+            case "random":
+                response.writeHead(200);
+                nb = request.url.split("/")[2];
+                //return response.end(`<html><p>${Math.floor(100 * Math.random())}</p></html>`);
+                return response.end(`<html><p>${nb}</p></html>`);
+            default:
+                response.writeHead(404);
+                return response.end(`<html><p>404: NOT FOUND</p></html>`);
+        }
+    } catch (error) {
+        console.error(error);
+        response.writeHead(500);
+        return response.end(`<html><p>500: INTERNAL SERVER ERROR</p></html>`);
+    }
+}
+```
 ## Partie 2 : framework Express
 
 On voit que la gestion manuelle des routes avec un grand `switch` va devenir complexe et laborieuse.
