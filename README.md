@@ -285,13 +285,13 @@ async function requestListener(request, response) {
                 for (let i=0;i<nb;i++){
                     valeur_random.push(Math.floor(100 * Math.random()));
                 }
+                valeur_random=valeur_random.map((_) => `<li>${Math.floor(100 * Math.random())}</li>`)
+    .join("\n");
                 response.writeHead(200);
-                // return response.end(`<html><p>${Math.floor(100 * Math.random())}</p></html>`);
                 return response.end(`<html><p>${valeur_random}</p></html>`);
             case "random":
                 response.writeHead(200);
                 nb = request.url.split("/")[2];
-                //return response.end(`<html><p>${Math.floor(100 * Math.random())}</p></html>`);
                 return response.end(`<html><p>${nb}</p></html>`);
             default:
                 response.writeHead(404);
@@ -318,6 +318,12 @@ npm install --save express http-errors loglevel morgan
 ```
 
 **Question 2.1** donner les URL des documentations de chacun des modules installés par la commande précédente.
+```
+Express.js :  https://expressjs.com/.
+http-errors : https://github.com/jshttp/http-errors.
+loglevel : https://www.npmjs.com/package/loglevel.
+morgan : https://www.npmjs.com/package/morgan
+```
 
 Ensuite, sur le modèle des scripts `http-prod` et `http-dev` du fichier `package.json`, créer les scripts `express-prod` et `express-dev`.
 
