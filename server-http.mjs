@@ -69,6 +69,7 @@ async function requestListener(request, response) {
                 for (let i=0;i<nb;i++){
                     valeur_random.push(Math.floor(100 * Math.random()));
                 }
+                valeur_random=valeur_random.map((_) => `<li>${Math.floor(100 * Math.random())}</li>`).join("\n");
                 response.writeHead(200);
                 return response.end(`<html><p>${valeur_random}</p></html>`);
             case "random":
