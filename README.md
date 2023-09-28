@@ -363,6 +363,15 @@ app.listen(port, host);
 
 **Question 2.3** lister les en-têtes des réponses fournies par Express. Lesquelles sont nouvelles par rapport au serveur HTTP ?
 
+```
+- X-Powered-By
+- Accept-Ranges
+- Cache-Control
+- Last-Modified
+- ETag
+- Content-Length
+```
+
 Remplacer la dernière ligne de `server-express.mjs` par les suivantes
 
 ```js
