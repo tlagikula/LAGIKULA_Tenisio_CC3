@@ -387,6 +387,9 @@ console.info(`File ${import.meta.url} executed.`);
 ```
 
 **Question 2.4** quand l'événement `listening` est-il déclenché ?
+```
+le listening est déclenché quand notre adresse est connecté au port.
+```
 
 **Commit/push** dans votre dépot Git.
 
@@ -402,7 +405,16 @@ Ce n'est pas très performant, d'autant plus qu'un _middleware_ Epxress [existe 
 
 **Question 2.5** indiquer quelle est l'option (activée par défaut) qui redirige `/` vers `/index.html` ?
 
+```
+{index:""} est l'option activée par défaut qui redirige '/' vers '/index.html'
+```
+
 **Question 2.6** visiter la page d'accueil puis rafraichir (Ctrl+R) et _ensuite_ **forcer** le rafraichissement (Ctrl+Shift+R). Quels sont les codes HTTP sur le fichier `style.css` ? Justifier.
+```
+304 quand c'est pas forcé
+200 quand c'est forcé
+ce changement est due au faite que le cache est désactivé.
+```
 
 réactiver le cache pour cette question seulement et désactiver après.
 
